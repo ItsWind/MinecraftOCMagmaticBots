@@ -38,13 +38,18 @@ end
 
 local function doMagmaticRow(useLeft, rowNum)
   local turnFuncToUse = { [true] = robot.turnLeft, [false] = robot.turnRight }
-  for i=1,botutils.getConfig("magmaticColumns")-1 do
+  local magsDone = 0
+  local magsToDo = botutils.getConfig("magmaticColumns")
+  repeat
     local fillAmt = tankController.getTankCapacity(3) - tankController.getTankLevel(3)
     robot.fill(fillAmt)
-    turnFuncToUse[useLeft]()
-    botutils.multipleMove(robot.forward, 1)
-    turnFuncToUse[not useLeft]()
-  end
+    if magsDone < magsToDo then
+      turnFuncToUse[useLeft]()
+      botutils.multipleMove(robot.forward, 1)
+      turnFuncToUse[not useLeft]()
+    end
+    magsDone = magsDone + 1
+  until(magsDone >= magsToDo)
   if rowNum < botutils.getConfig("magmaticRows") then
     botutils.multipleMove(robot.up, 1)
     doMagmaticRow(not useLeft, rowNum+1)
@@ -70,7 +75,7 @@ local function main()
     doMagmaticRow(false, 1)
     robot.turnLeft()
     botutils.multipleMove(robot.forward, 6)
-    os.sleep(30)
+    os.sleep(eve.getConfig("restTimeInSeconds"))
   end
 end
 
