@@ -24,11 +24,10 @@ function botutils.face(facingStr)
 end
 
 function botutils.multipleMove(moveFunc, times)
-  while times > 0 do
-    if moveFunc() then
-      times = times-1
-    end
-  end
+  local amtMoved = 0
+  repeat
+    if moveFunc() then amtMoved = amtMoved + 1 end
+  until(amtMoved >= times)
 end
 
 function botutils.say(str)
