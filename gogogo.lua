@@ -38,7 +38,7 @@ end
 
 local function doMagmaticRow(useLeft, rowNum)
   local turnFuncToUse = { [true] = robot.turnLeft, [false] = robot.turnRight }
-  for i=0,botutils.getConfig("magmaticColumns") do
+  for i=1,botutils.getConfig("magmaticColumns")-1 do
     local fillAmt = tankController.getTankCapacity(3) - tankController.getTankLevel(3)
     robot.fill(fillAmt)
     turnFuncToUse[useLeft]()
