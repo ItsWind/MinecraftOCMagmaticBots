@@ -38,7 +38,7 @@ end
 
 local function doMagmaticRow(useLeft, rowNum)
   local turnFuncToUse = { [true] = robot.turnLeft, [false] = robot.turnRight }
-  for i=1,botutils.getConfig("magmaticColumns") do
+  for i=0,botutils.getConfig("magmaticColumns") do
     local fillAmt = tankController.getTankCapacity(3) - tankController.getTankLevel(3)
     robot.fill(fillAmt)
     turnFuncToUse[useLeft]()
@@ -49,11 +49,7 @@ local function doMagmaticRow(useLeft, rowNum)
     robot.up()
     doMagmaticRow(not useLeft, rowNum+1)
   else
-    while rowNum > 1 do
-      if robot.down()
-        rowNum = rowNum - 1
-      end
-    end
+    botutils.multipleMove(robot.down, rowNum-1)
   end
 end
 
@@ -63,7 +59,7 @@ local function main()
     fillSmelterTank()
     grabPyrotheum()
     robot.turnRight()
-    robot.forward()
+    botutils.multipleMove(robot.forward, 1)
     robot.turnRight()
     botutils.multipleMove(robot.forward, 2)
     fillSmelterChest()
