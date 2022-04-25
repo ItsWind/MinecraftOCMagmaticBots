@@ -42,11 +42,11 @@ local function doMagmaticRow(useLeft, rowNum)
     local fillAmt = tankController.getTankCapacity(3) - tankController.getTankLevel(3)
     robot.fill(fillAmt)
     turnFuncToUse[useLeft]()
-    robot.forward()
+    botutils.multipleMove(robot.forward, 1)
     turnFuncToUse[not useLeft]()
   end
   if rowNum < botutils.getConfig("magmaticRows") then
-    robot.up()
+    botutils.multipleMove(robot.up, 1)
     doMagmaticRow(not useLeft, rowNum+1)
   else
     botutils.multipleMove(robot.down, rowNum-1)
