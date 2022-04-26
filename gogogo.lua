@@ -7,18 +7,27 @@ local invController = component.inventory_controller
 local tankController = component.tank_controller
 local nav = component.navigation
 
+local args = {...}
+local smelteryTankCapacity = 25889
+local smelteryTankLevel = args[1]
+
 local function fillUp()
   botutils.face("s")
+  smelteryTankLevel = smelteryTankLevel - robot.tankSpace()
   robot.useUp()
   while robot.tankSpace() ~= 0 do os.sleep(5) end
 end
 
 local function grabPyrotheum()
   botutils.face("w")
+  local pyrotheumAmtToGrab = math.floor((smelteryTankCapacity - smelteryTankLevel)/100)
   local currentChestSlot = 1
-  while invController.getStackInInternalSlot(robot.inventorySize()) == nil do
+  while pyrotheumAmtToGrab > 0 do
     if currentChestSlot > invController.getInventorySize(3) then break end
-    invController.suckFromSlot(3, currentChestSlot)
+    local pyrotheumAmtInSelectedSlot = invController.getStackInSlot(3, currentChestSlot)["size"]
+    if pyrotheumAmtInSelectedSlot > pyrotheumAmtToGrab then pyrotheumAmtInSelectedSlot = pyrotheumAmtToGrab end
+    invController.suckFromSlot(3, currentChestSlot, pyrotheumAmtInSelectedSlot)
+    pyrotheumAmtToGrab = pyrotheumAmtToGrab - pyrotheumAmtInSelectedSlot
     currentChestSlot = currentChestSlot+1
   end
 end
@@ -34,6 +43,7 @@ local function fillSmelterChest()
     robot.select(i)
     robot.dropDown()
   end
+  robot.select(1)
 end
 
 local function doMagmaticRow(useLeft, rowNum)
