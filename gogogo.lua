@@ -48,7 +48,7 @@ local function fillSmelterChest()
     if stackInfo ~= nil then pyrotheumAmtPutIn = pyrotheumAmtPutIn + stackInfo["size"] end
     robot.dropDown()
   end
-  smelteryTankLevel = smelteryTankLevel + (pyrotheumPutIn*100)
+  smelteryTankLevel = smelteryTankLevel + (pyrotheumAmtPutIn*100)
   robot.select(1)
 end
 
