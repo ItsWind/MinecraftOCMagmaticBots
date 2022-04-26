@@ -24,7 +24,9 @@ local function grabPyrotheum()
   local currentChestSlot = 1
   while pyrotheumAmtToGrab > 0 do
     if currentChestSlot > invController.getInventorySize(3) then break end
-    local pyrotheumAmtInSelectedSlot = invController.getStackInSlot(3, currentChestSlot)["size"]
+    local stackInfo = invController.getStackInSlot(3, currentChestSlot)
+    local pyrotheumAmtInSelectedSlot = 0
+    if stackInfo ~= nil then pyrotheumAmtInSelectedSlot = stackInfo["size"] end
     if pyrotheumAmtInSelectedSlot > pyrotheumAmtToGrab then pyrotheumAmtInSelectedSlot = pyrotheumAmtToGrab end
     invController.suckFromSlot(3, currentChestSlot, pyrotheumAmtInSelectedSlot)
     pyrotheumAmtToGrab = pyrotheumAmtToGrab - pyrotheumAmtInSelectedSlot
@@ -39,10 +41,14 @@ local function fillSmelterTank()
 end
 
 local function fillSmelterChest()
+  local pyrotheumAmtPutIn = 0
   for i=1,robot.inventorySize() do
     robot.select(i)
+    local stackInfo = invController.getStackInInternalSlot(i)
+    if stackInfo ~= nil then pyrotheumAmtPutIn = pyrotheumAmtPutIn + stackInfo["size"] end
     robot.dropDown()
   end
+  smelteryTankLevel = smelteryTankLevel + (pyrotheumPutIn*100)
   robot.select(1)
 end
 
